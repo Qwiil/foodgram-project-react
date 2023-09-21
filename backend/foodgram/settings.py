@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "djoser",
     "drf_yasg",
     "colorfield",
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -38,6 +39,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -138,3 +140,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LENGTH_OF_FIELDS = 254
 
 LENGTH_OF_RECIPES = 200
+
+CORS_ALLOW_ALL_ORIGINS = False  # Разрешить доступ только с определенных доменов
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Замените на адрес вашего фронтенда React
+]
