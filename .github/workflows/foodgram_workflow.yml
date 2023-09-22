@@ -99,14 +99,14 @@ jobs:
             sudo echo DB_HOST=${{ secrets.DB_HOST }} >> .env
             sudo echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             
-            cd foodram
-            sudo docker system prune -f -a
-            sudo docker compose -f docker-compose.yml pull
-            sudo docker compose -f docker-compose.yml down
-            sudo docker compose -f docker-compose.yml up -d
-            sudo docker compose -f docker-compose.yml exec backend python manage.py migrate
-            sudo docker compose -f docker-compose.yml exec backend python manage.py collectstatic
-            sudo docker compose -f docker-compose.yml exec backend cp -r /app/foodgram/static/. /backend_static/static/
+            sudo docker-compose stop
+            
+            sudo docker-compose rm foodgram-backend
+            sudo docker-compose pull foodgram-backend
+            sudo docker-compose rm foodgram-frontend
+            sudo docker-compose pull foodgram-frontend
+            
+            sudo docker-compose up -d --build
 
   send_message:
     name: Sending Telegram message
