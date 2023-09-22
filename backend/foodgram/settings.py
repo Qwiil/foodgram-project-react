@@ -1,15 +1,15 @@
 import os
+
 from dotenv import load_dotenv
-from pathlib import Path
 
 load_dotenv()
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-SECRET_KEY = 'django-insecure-xw#g8plr39gz+gqwr6sfe%8qu!9-_3twwyj$f=&87bri0b#61m'
+SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key')
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     "djoser",
     "drf_yasg",
     "colorfield",
-    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -39,7 +38,6 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -68,8 +66,13 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.getenv('DB_ENGINE',
+                            default='django.db.backends.postgresql'),
+        'NAME': os.getenv('POSTGRES_DB', default='postgres'),
+        'USER': os.getenv('POSTGRES_USER', default='postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
+        'HOST': os.getenv('DB_HOST', default='localhost'),
+        'PORT': os.getenv('DB_PORT', default='5432')
     }
 }
 
@@ -140,8 +143,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LENGTH_OF_FIELDS = 254
 
 LENGTH_OF_RECIPES = 200
-
-CORS_ALLOW_ALL_ORIGINS = False  # Разрешить доступ только с определенных доменов
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Замените на адрес вашего фронтенда React
-]
