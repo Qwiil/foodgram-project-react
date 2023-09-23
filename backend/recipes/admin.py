@@ -35,7 +35,7 @@ class RecipeAdmin(admin.ModelAdmin):
         return ', '.join([
             ingredients.name for ingredients
             in obj.ingredients.values(
-                'ingredient_name', 'amount',
+                'name', 'amount',
                 'ingredient_measurement_unit')])
 
 
