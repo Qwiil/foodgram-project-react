@@ -47,7 +47,7 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/foodgram-backend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
 
   # build_and_push_frontend_to_docker_hub:
   #   name: Pushing frontend image to Docker Hub
@@ -69,7 +69,7 @@ jobs:
   #       with:
   #         context: ./frontend
   #         push: true
-  #         tags: ${{ secrets.DOCKER_USERNAME }}/foodgram-frontend:latest
+  #         tags: ${{ secrets.DOCKER_USERNAME }}/foodgram_frontend:latest
 
   deploy:
     name: Deploying on remote server
@@ -102,10 +102,8 @@ jobs:
             
             sudo docker compose stop
             
-            sudo docker compose rm foodgram-backend
-            sudo docker compose pull foodgram-backend
-            sudo docker compose rm foodgram-frontend
-            sudo docker compose pull foodgram-frontend
+            sudo docker container rm foodgram_backend
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
             
             sudo docker compose up -d --build
 
