@@ -3,7 +3,7 @@ from django.conf import settings
 from django.core.validators import (MaxValueValidator, MinValueValidator,
                                     RegexValidator)
 from django.db import models
-from django.db.models import UniqueConstraint
+from django.db.models import UniqueConstraint, Sum
 
 from users.models import User
 
@@ -166,6 +166,15 @@ class IngredientRecipe(models.Model):
     amount = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(1)],
         verbose_name='Количество ингредиента')
+
+    @classmethod
+    def get_shopping_cart(cls, user):
+        ingredients = cls.objects.filter(
+            recipe__shopping_list__user=user
+        ).order_by('ingredient__name').values(
+            'ingredient__name', 'ingredient__measurement_unit'
+        ).annotate(ingredient_value=Sum('amount'))
+        return ingredients
 
     class Meta:
         ordering = ('-id', )

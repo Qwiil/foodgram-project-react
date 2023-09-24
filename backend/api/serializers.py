@@ -24,12 +24,13 @@ class UserSerializer(UserSerializer):
             return False
         return obj.following.filter(user=request.user).exists()
 
-    def validate(self, data):
+    def validate_username(self, value):
         """Запрещает пользователям изменять себе username на me."""
-        if data.get('username') == 'me':
+        if value.lower() == 'me':
             raise serializers.ValidationError(
                 'Использовать имя me запрещено'
             )
+        return value
 
 
 class UserCreateSerializer(UserCreateSerializer):
@@ -182,15 +183,16 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
 
     def validate_ingredients(self, ingredients):
         ings = self.initial_data.get('ingredients')
-        ingredients_liist = []
+        ingredients_set = set()
         if not ings:
             raise serializers.ValidationError(
                 'Отсутствуют ингредиенты')
         for ingredient in ings:
-            if ingredient['id'] in ingredients_liist:
+            ingredient_id = ingredient['id']
+            if ingredient_id in ingredients_set:
                 raise serializers.ValidationError(
                     'Этот ингредиент уже добавлен')
-            ingredients_liist.append(ingredient['id'])
+            ingredients_set.add(ingredient_id)
         return ingredients
 
     @staticmethod
