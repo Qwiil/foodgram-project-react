@@ -32,11 +32,15 @@ class RecipeAdmin(admin.ModelAdmin):
 
     def get_ingredients(self, obj):
         """Получает ингредиент или список ингредиентов рецепта."""
-        return ', '.join([
-            ingredients.name for ingredients
-            in obj.ingredients.values(
-                'name', 'amount',
-                'ingredient_measurement_unit')])
+        ingredients = IngredientRecipe.objects.filter(recipe=obj)
+        ingredients_list = [
+            f"{ingredient.ingredient.name} - {ingredient.amount} "
+            f"{ingredient.ingredient.measurement_unit}"
+            for ingredient in ingredients
+        ]
+        return ', '.join(ingredients_list)
+
+    get_ingredients.short_description = 'Ингредиенты'
 
 
 class ShoppingCartAdmin(admin.ModelAdmin):
