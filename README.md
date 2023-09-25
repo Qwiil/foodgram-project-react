@@ -2,7 +2,7 @@ Foodgram - продуктовый помощник с базой кулинар�
 
 ### Технологии:
 
-Python, Django, Docker, Gunicorn, NGINX, PostgreSQL.
+Python, Django, Django REST framework, Docker, Gunicorn, NGINX, PostgreSQL.
 
 Проект доступен [http://84.201.162.72/]
 
@@ -68,6 +68,11 @@ sudo docker compose exec backend python manage.py createsuperuser
 - Собрать статику:
 ```
 sudo docker compose exec backend python manage.py collectstatic --noinput
+```
+
+- Загрузить список ингредиентов:
+```
+sudo docker compose exec backend python manage.py import_ingredients
 ```
 
 - Для остановки контейнеров Docker:
