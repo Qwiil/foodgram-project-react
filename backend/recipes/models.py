@@ -168,12 +168,13 @@ class IngredientRecipe(models.Model):
         verbose_name='Количество ингредиента')
 
     @classmethod
-    def get_shopping_cart(cls, user):
-        return cls.objects.filter(
-            recipe__shopping_list__user=user
+    def get_shopping_cart(self, request):
+        ingredients = IngredientRecipe.objects.filter(
+            recipe__shopping_list__user=request.user
         ).order_by('ingredient__name').values(
             'ingredient__name', 'ingredient__measurement_unit'
         ).annotate(ingredient_value=Sum('amount'))
+        return self.create_shopping_cart(ingredients)
 
     class Meta:
         ordering = ('-id', )
