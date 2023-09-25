@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -97,16 +98,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 f"\n{ingredient['ingredient__name']} "
                 f"({ingredient['ingredient__measurement_unit']}) - "
                 f"{ingredient['ingredient_value']}")
-        file = 'shopping_list.txt'
-        response = HttpResponse(shopping_list, content_type='text/plain')
-        response['Content-Disposition'] = f'attachment; filename="{file}.txt"'
-        return response
+        response_data = {'shopping_list': shopping_list}
+        return JsonResponse(response_data)
 
     @action(detail=False, methods=['GET'])
     def download_shopping_cart(self, request):
         ingredients = IngredientRecipe.get_shopping_cart(request.user)
         shopping_cart_data = self.create_shopping_cart(ingredients)
-        return Response(shopping_cart_data)
+        return shopping_cart_data
 
     @action(detail=True, methods=['post'])
     def shopping_cart(self, request, pk):
